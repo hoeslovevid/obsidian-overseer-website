@@ -17,11 +17,8 @@ Landing page for the **Obsidian Overseer** Discord bot.
    - `CONTACT_EMAIL` — A support email (e.g. `support@example.com`). Shows an “Email us” button that opens the user’s mail client.
 
 3. **Contact form (messages to your Discord)**  
-   Set `CONTACT_WEBHOOK_URL` in the script to a Discord **channel webhook** URL. Form submissions are posted to that channel.
-
-   - In Discord: go to the channel where you want messages (e.g. a private channel) → **Edit Channel** → **Integrations** → **Webhooks** → **New Webhook**. Copy the webhook URL.
-   - In `index.html`, set `CONTACT_WEBHOOK_URL = 'https://discord.com/api/webhooks/...'` (your full URL).
-   - **Note:** The webhook URL is visible in the page source, so use a private channel. If it’s abused, delete the webhook and create a new one.
+   - **GitHub Pages:** In `contact.html`, set `CONTACT_WEBHOOK_URL` to your Discord channel webhook URL (from **Edit Channel** → **Integrations** → **Webhooks** → **New Webhook**). The form will post directly to Discord. The webhook URL will be visible in the repo and in “View Source,” so use a **private** channel and if it’s abused, delete the webhook and create a new one.
+   - **Netlify (optional, webhook hidden):** Deploy to [Netlify](https://netlify.com), leave `CONTACT_WEBHOOK_URL` empty in the script, and in Netlify → **Site settings** → **Environment variables** add `CONTACT_WEBHOOK_URL` with your webhook URL. The form will use the serverless function and the webhook stays server-side only.
 
 4. **Developers**  
    The “Developers” section lists **Danger!** by default (from the bot’s config). To add or change developers, edit the `<div class="dev-list" id="dev-list">` section and add more `<span class="dev-badge">Name</span>` elements.
@@ -40,4 +37,5 @@ Landing page for the **Obsidian Overseer** Discord bot.
 
 ## Hosting
 
-Host the site anywhere that serves static files (e.g. **GitHub Pages**). Set `CONTACT_WEBHOOK_URL` so the contact form posts messages to your Discord channel. No build step required.
+- **GitHub Pages:** Publish the repo (e.g. from the `main` branch). Set `CONTACT_WEBHOOK_URL` in `contact.html` so the form posts to Discord. No build step. The webhook URL will be visible in the repo; use a private channel and rotate the webhook if needed.
+- **Netlify (optional):** Deploy the same repo to Netlify and set `CONTACT_WEBHOOK_URL` in the dashboard (env) instead of in the script so the webhook stays hidden.

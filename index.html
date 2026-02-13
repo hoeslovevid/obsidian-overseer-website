@@ -775,7 +775,7 @@
       <a href="#" class="nav-logo">Obsidian Overseer</a>
       <div class="nav-links">
         <a href="#features">Features</a>
-        <a href="#contact">Contact</a>
+        <a href="contact.html">Contact</a>
         <a href="legal.html">Legal</a>
       </div>
     </nav>
@@ -846,39 +846,10 @@
       </div>
     </section>
 
-    <section class="contact" id="contact">
-      <h2 class="section-title">Contact the team</h2>
-      <p class="section-subtitle">Questions, feedback, or need help? Reach out through Discord or email.</p>
-      <div class="contact-cards">
-        <a id="contact-discord" class="contact-card discord" href="#" target="_blank" rel="noopener noreferrer" style="display: none;">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-          <span>Join our Discord<small>Get support &amp; chat with the team</small></span>
-        </a>
-        <a id="contact-email" class="contact-card email" href="#" style="display: none;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          <span>Email us<small>Support and inquiries</small></span>
-        </a>
-      </div>
-      <div class="contact-form-wrap">
-        <h3>Send us a message</h3>
-        <p class="section-subtitle" style="margin-bottom: 20px;">We’ll get it in Discord. Fill out the form below.</p>
-        <form id="contact-form">
-          <div class="form-group">
-            <label for="contact-name">Your name <span class="optional">(optional)</span></label>
-            <input type="text" id="contact-name" name="name" placeholder="e.g. Alex" maxlength="100" autocomplete="name">
-          </div>
-          <div class="form-group">
-            <label for="contact-email-field">Email <span class="optional">(optional)</span></label>
-            <input type="email" id="contact-email-field" name="email" placeholder="e.g. you@example.com" maxlength="200" autocomplete="email">
-          </div>
-          <div class="form-group">
-            <label for="contact-message">Message <span style="color: var(--accent);">*</span></label>
-            <textarea id="contact-message" name="message" placeholder="Your question or feedback..." required maxlength="2000"></textarea>
-          </div>
-          <button type="submit" class="form-submit" id="contact-submit">Send message</button>
-          <p id="contact-form-message" class="form-message" role="alert"></p>
-        </form>
-      </div>
+    <section class="contact-cta" style="padding: 40px 0 48px; text-align: center; border-top: 1px solid var(--border);">
+      <h2 class="section-title">Need help or have feedback?</h2>
+      <p class="section-subtitle" style="margin-bottom: 20px;">For support, questions, or suggestions, our team is here to help.</p>
+      <a href="contact.html" class="invite-btn" style="text-decoration: none;">Contact us</a>
     </section>
 
     <section class="developer">
@@ -907,14 +878,6 @@
     const PERMISSIONS = '277025508160';
     const SCOPE = 'bot%20applications.commands';
 
-    // Optional: Discord server invite for support/contact (e.g. https://discord.gg/your-invite-code)
-    const DISCORD_SERVER_INVITE = '';
-    // Optional: contact email (e.g. support@example.com)
-    const CONTACT_EMAIL = '';
-    // Discord webhook URL for the contact form — messages are posted to that channel.
-    // Create one: Server → Channel → Edit → Integrations → Webhooks. (URL is visible in page source; use a private channel.)
-    const CONTACT_WEBHOOK_URL = 'https://discord.com/api/webhooks/1471771569197027364/40lA9NMgphFHpIzt0mS8250kh--oD-JFIc4FPy3-ohfJ8vqrUMi37Rk2CFcDlEnE3dlI';
-
     // Developer card: name, avatar image, and optional Discord message link
     const DEVELOPER_NAME = 'Danger!';
     const DEVELOPER_IMAGE = 'assets/developer.png';  // e.g. 'assets/developer.png' or full URL — leave empty for initial placeholder
@@ -931,21 +894,6 @@
         e.preventDefault();
         alert('Please set BOT_CLIENT_ID in index.html to your bot\'s Application ID from the Discord Developer Portal.');
       });
-    }
-
-    // ——— Contact section ———
-    var showFallback = true;
-    if (DISCORD_SERVER_INVITE && DISCORD_SERVER_INVITE.trim()) {
-      var discordLink = document.getElementById('contact-discord');
-      discordLink.href = DISCORD_SERVER_INVITE.trim();
-      discordLink.style.display = 'inline-flex';
-      showFallback = false;
-    }
-    if (CONTACT_EMAIL && CONTACT_EMAIL.trim()) {
-      var emailLink = document.getElementById('contact-email');
-      emailLink.href = 'mailto:' + CONTACT_EMAIL.trim();
-      emailLink.style.display = 'inline-flex';
-      showFallback = false;
     }
 
     // ——— Developer card ———
@@ -971,79 +919,6 @@
         msgLink.href = DEVELOPER_DISCORD_LINK.trim();
         msgLink.style.display = 'inline-flex';
       }
-    })();
-
-    // ——— Contact form ———
-    (function() {
-      var form = document.getElementById('contact-form');
-      var submitBtn = document.getElementById('contact-submit');
-      var msgEl = document.getElementById('contact-form-message');
-
-      function showMsg(text, isError) {
-        msgEl.textContent = text;
-        msgEl.className = 'form-message ' + (isError ? 'error' : 'success');
-        msgEl.style.display = 'block';
-      }
-
-      function hideMsg() {
-        msgEl.style.display = 'none';
-        msgEl.className = 'form-message';
-      }
-
-      form.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        hideMsg();
-        var name = (document.getElementById('contact-name').value || '').trim();
-        var email = (document.getElementById('contact-email-field').value || '').trim();
-        var message = (document.getElementById('contact-message').value || '').trim();
-        if (!message) {
-          showMsg('Please enter a message.', true);
-          return;
-        }
-        if (message.length > 2000) {
-          showMsg('Message must be 2000 characters or less.', true);
-          return;
-        }
-
-        var webhookUrl = CONTACT_WEBHOOK_URL && CONTACT_WEBHOOK_URL.trim();
-        if (!webhookUrl) {
-          showMsg('Contact form is not configured. Set CONTACT_WEBHOOK_URL in the page script.', true);
-          return;
-        }
-
-        submitBtn.disabled = true;
-        var embed = {
-          title: '📩 New message from website',
-          color: 0x8b7cf8,
-          fields: [
-            { name: 'From', value: name || '—', inline: true },
-            { name: 'Email', value: email || '—', inline: true },
-            { name: 'Message', value: message.slice(0, 1024), inline: false },
-          ],
-          footer: { text: 'Obsidian Overseer contact form' },
-          timestamp: new Date().toISOString(),
-        };
-        if (message.length > 1024) {
-          embed.fields.push({ name: '(continued)', value: message.slice(1024, 2048), inline: false });
-        }
-
-        try {
-          var res = await fetch(webhookUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ embeds: [embed] }),
-          });
-          if (res.ok) {
-            showMsg('Message sent! We\'ll get back to you.', false);
-            form.reset();
-          } else {
-            showMsg('Could not send. Try again or use Discord/email above.', true);
-          }
-        } catch (err) {
-          showMsg('Network error. Check your connection and try again.', true);
-        }
-        submitBtn.disabled = false;
-      });
     })();
 
     // ——— Legal tabs ———
