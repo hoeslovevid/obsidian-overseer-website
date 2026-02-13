@@ -6,22 +6,31 @@
   <title>Obsidian Overseer — Discord Bot</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #0d0f14;
-      --surface: #151820;
-      --surface2: #1c1f2a;
+      --bg: #0a0c10;
+      --bg-gradient: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(124, 110, 246, 0.15), transparent),
+                    radial-gradient(ellipse 60% 40% at 80% 50%, rgba(88, 101, 242, 0.08), transparent);
+      --surface: #12141c;
+      --surface2: #1a1d28;
+      --surface-hover: #22262f;
       --border: #2a2e3d;
-      --text: #e6e9f0;
+      --border-focus: #3d4254;
+      --text: #f0f2f5;
       --text-muted: #8b90a4;
-      --accent: #7c6ef6;
-      --accent-dim: #5b4fd4;
-      --accent-glow: rgba(124, 110, 246, 0.25);
-      --gold: #d4a853;
-      --success: #6bcf7f;
-      --radius: 12px;
-      --radius-sm: 8px;
+      --text-subtle: #6b7080;
+      --accent: #8b7cf8;
+      --accent-bright: #a89bfa;
+      --accent-dim: #6d5dd6;
+      --accent-glow: rgba(139, 124, 248, 0.35);
+      --discord-blurple: #5865F2;
+      --discord-blurple-hover: #4752c4;
+      --radius: 14px;
+      --radius-lg: 20px;
+      --radius-sm: 10px;
+      --shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 12px 48px rgba(0, 0, 0, 0.5);
     }
 
     * {
@@ -30,144 +39,297 @@
       padding: 0;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       font-family: 'Outfit', sans-serif;
       background: var(--bg);
+      background-image: var(--bg-gradient);
       color: var(--text);
       line-height: 1.6;
       min-height: 100vh;
       overflow-x: hidden;
     }
 
-    /* Subtle grid background */
     body::before {
       content: '';
       position: fixed;
       inset: 0;
       background-image:
-        linear-gradient(rgba(124, 110, 246, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(124, 110, 246, 0.03) 1px, transparent 1px);
-      background-size: 48px 48px;
+        linear-gradient(rgba(139, 124, 248, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(139, 124, 248, 0.04) 1px, transparent 1px);
+      background-size: 56px 56px;
       pointer-events: none;
       z-index: 0;
     }
 
     .container {
-      max-width: 900px;
+      max-width: 960px;
       margin: 0 auto;
-      padding: 0 24px;
+      padding: 0 28px;
       position: relative;
       z-index: 1;
     }
 
-    /* ----- Header ----- */
-    header {
-      padding: 32px 0 24px;
-      text-align: center;
+    /* ----- Nav ----- */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 0 24px;
+      flex-wrap: wrap;
+      gap: 12px;
     }
 
-    .logo {
-      font-size: 2.5rem;
+    .nav-logo {
+      font-size: 1.25rem;
       font-weight: 700;
       letter-spacing: -0.02em;
-      background: linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      transition: color 0.2s, background 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+      background: var(--surface2);
+    }
+
+    /* ----- Hero ----- */
+    .hero {
+      text-align: center;
+      padding: 48px 0 56px;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 3.5rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 16px;
+      background: linear-gradient(160deg, var(--text) 0%, var(--text) 40%, var(--accent-bright) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      margin-bottom: 8px;
     }
 
-    .tagline {
+    .hero p {
+      font-size: 1.2rem;
       color: var(--text-muted);
-      font-size: 1.1rem;
+      max-width: 520px;
+      margin: 0 auto 36px;
       font-weight: 500;
     }
 
-    /* ----- Invite CTA ----- */
-    .invite-section {
-      text-align: center;
-      padding: 32px 0 40px;
+    /* ----- Invite CTA (primary) ----- */
+    .invite-hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
     }
 
     .invite-btn {
       display: inline-flex;
       align-items: center;
-      gap: 10px;
-      padding: 14px 28px;
+      justify-content: center;
+      gap: 12px;
+      padding: 18px 36px;
       font-family: inherit;
-      font-size: 1.05rem;
-      font-weight: 600;
+      font-size: 1.15rem;
+      font-weight: 700;
       color: #fff;
-      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dim) 100%);
+      background: linear-gradient(135deg, var(--discord-blurple) 0%, var(--discord-blurple-hover) 100%);
       border: none;
       border-radius: var(--radius);
       cursor: pointer;
       text-decoration: none;
-      box-shadow: 0 4px 20px var(--accent-glow);
-      transition: transform 0.15s ease, box-shadow 0.2s ease;
+      box-shadow: 0 6px 28px rgba(88, 101, 242, 0.4);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s;
     }
 
     .invite-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 28px var(--accent-glow);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 36px rgba(88, 101, 242, 0.45);
+    }
+
+    .invite-btn:active {
+      transform: translateY(-1px);
     }
 
     .invite-btn svg {
-      width: 22px;
-      height: 22px;
+      width: 26px;
+      height: 26px;
+      flex-shrink: 0;
+    }
+
+    .invite-note {
+      font-size: 0.9rem;
+      color: var(--text-subtle);
+    }
+
+    .invite-note em { font-style: normal; color: var(--text-muted); }
+
+    /* ----- Section headings ----- */
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .section-subtitle {
+      font-size: 1rem;
+      color: var(--text-muted);
+      margin-top: -12px;
+      margin-bottom: 24px;
+      max-width: 560px;
     }
 
     /* ----- Features ----- */
-    .section-title {
-      font-size: 1.35rem;
-      font-weight: 600;
-      margin-bottom: 20px;
-      color: var(--text);
-    }
-
     .features {
-      padding: 24px 0 40px;
+      padding: 56px 0 64px;
     }
 
     .feature-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
     }
 
     .feature-card {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 20px;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      padding: 24px;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s, background 0.2s;
     }
 
     .feature-card:hover {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 1px var(--accent);
+      border-color: var(--border-focus);
+      background: var(--surface2);
+      box-shadow: var(--shadow);
+      transform: translateY(-2px);
+    }
+
+    .feature-card .icon {
+      font-size: 1.75rem;
+      margin-bottom: 14px;
+      display: block;
     }
 
     .feature-card h3 {
-      font-size: 1rem;
+      font-size: 1.05rem;
       font-weight: 600;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
       color: var(--text);
     }
 
     .feature-card p {
       font-size: 0.9rem;
       color: var(--text-muted);
+      line-height: 1.55;
     }
 
-    .feature-card .icon {
-      font-size: 1.5rem;
-      margin-bottom: 10px;
+    /* ----- Contact ----- */
+    .contact {
+      padding: 56px 0 64px;
+      border-top: 1px solid var(--border);
+    }
+
+    .contact-cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+    }
+
+    .contact-card {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      padding: 20px 28px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 600;
+      font-size: 1rem;
+      transition: border-color 0.2s, background 0.2s, transform 0.2s, box-shadow 0.2s;
+    }
+
+    .contact-card:hover {
+      border-color: var(--accent);
+      background: var(--surface2);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+
+    .contact-card svg {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+
+    .contact-card.discord svg { color: var(--discord-blurple); }
+    .contact-card.email svg { color: var(--accent); }
+
+    .contact-card span:first-of-type { margin-right: 4px; }
+    .contact-card small {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .contact-note {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    .contact-note code {
+      font-size: 0.85em;
+      padding: 2px 6px;
+      background: var(--surface2);
+      border-radius: 4px;
+      color: var(--text-subtle);
     }
 
     /* ----- Developers ----- */
     .developers {
-      padding: 24px 0 40px;
+      padding: 40px 0 56px;
     }
 
     .dev-list {
@@ -181,30 +343,30 @@
       background: var(--surface2);
       border: 1px solid var(--border);
       border-radius: var(--radius-sm);
-      padding: 10px 18px;
+      padding: 12px 20px;
       font-size: 0.95rem;
-      font-weight: 500;
+      font-weight: 600;
       color: var(--text);
     }
 
-    /* ----- Legal tabs ----- */
+    /* ----- Legal ----- */
     .legal-section {
-      padding: 24px 0 48px;
+      padding: 40px 0 56px;
       border-top: 1px solid var(--border);
     }
 
     .legal-tabs {
       display: flex;
-      gap: 8px;
+      gap: 10px;
       margin-bottom: 20px;
       flex-wrap: wrap;
     }
 
     .legal-tab {
-      padding: 10px 20px;
+      padding: 12px 22px;
       font-family: inherit;
       font-size: 0.95rem;
-      font-weight: 500;
+      font-weight: 600;
       color: var(--text-muted);
       background: var(--surface);
       border: 1px solid var(--border);
@@ -215,13 +377,13 @@
 
     .legal-tab:hover {
       color: var(--text);
-      border-color: var(--accent);
+      border-color: var(--border-focus);
     }
 
     .legal-tab.active {
       color: var(--accent);
       border-color: var(--accent);
-      background: var(--accent-glow);
+      background: rgba(139, 124, 248, 0.12);
     }
 
     .legal-content {
@@ -229,8 +391,8 @@
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 28px 32px;
-      max-height: 420px;
+      padding: 32px 36px;
+      max-height: 440px;
       overflow-y: auto;
     }
 
@@ -239,8 +401,8 @@
     }
 
     .legal-content h2 {
-      font-size: 1.2rem;
-      font-weight: 600;
+      font-size: 1.25rem;
+      font-weight: 700;
       margin-bottom: 16px;
       color: var(--text);
     }
@@ -248,7 +410,7 @@
     .legal-content h3 {
       font-size: 1rem;
       font-weight: 600;
-      margin: 20px 0 8px;
+      margin: 22px 0 8px;
       color: var(--text);
     }
 
@@ -259,17 +421,15 @@
     }
 
     .legal-content ul {
-      padding-left: 20px;
+      padding-left: 22px;
     }
 
-    .legal-content li {
-      margin-bottom: 4px;
-    }
+    .legal-content li { margin-bottom: 4px; }
 
     /* ----- Footer ----- */
     footer {
       text-align: center;
-      padding: 24px 0 32px;
+      padding: 28px 0 36px;
       color: var(--text-muted);
       font-size: 0.9rem;
       border-top: 1px solid var(--border);
@@ -278,30 +438,39 @@
     footer a {
       color: var(--accent);
       text-decoration: none;
+      font-weight: 500;
     }
 
-    footer a:hover {
-      text-decoration: underline;
-    }
+    footer a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
   <div class="container">
-    <header>
-      <h1 class="logo">Obsidian Overseer</h1>
-      <p class="tagline">A versatile Discord bot for community management, Warframe, economy, and more.</p>
+    <nav>
+      <a href="#" class="nav-logo">Obsidian Overseer</a>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#contact">Contact</a>
+        <a href="#legal">Legal</a>
+      </div>
+    </nav>
+
+    <header class="hero">
+      <span class="hero-badge">Discord Bot</span>
+      <h1>One bot for your whole server.</h1>
+      <p>Voice channels, economy, Warframe, moderation, events, and more. Add Obsidian Overseer to your Discord server in one click.</p>
+      <div class="invite-hero">
+        <a id="invite-link" class="invite-btn" href="#" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+          Add to Discord
+        </a>
+        <p class="invite-note">You need <em>Manage Server</em> permission to add the bot.</p>
+      </div>
     </header>
 
-    <section class="invite-section">
-      <a id="invite-link" class="invite-btn" href="#" target="_blank" rel="noopener noreferrer">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-        Invite to Discord
-      </a>
-      <p style="margin-top: 12px; font-size: 0.9rem; color: var(--text-muted);">You need <em>Manage Server</em> permission to add the bot.</p>
-    </section>
-
-    <section class="features">
+    <section class="features" id="features">
       <h2 class="section-title">What Obsidian Overseer can do</h2>
+      <p class="section-subtitle">Everything you need to run a thriving community server—voice, economy, Warframe, moderation, and more.</p>
       <div class="feature-grid">
         <div class="feature-card">
           <span class="icon">🎤</span>
@@ -351,6 +520,22 @@
       </div>
     </section>
 
+    <section class="contact" id="contact">
+      <h2 class="section-title">Contact the team</h2>
+      <p class="section-subtitle">Questions, feedback, or need help? Reach out through Discord or email.</p>
+      <div class="contact-cards">
+        <a id="contact-discord" class="contact-card discord" href="#" target="_blank" rel="noopener noreferrer" style="display: none;">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+          <span>Join our Discord<small>Get support &amp; chat with the team</small></span>
+        </a>
+        <a id="contact-email" class="contact-card email" href="#" style="display: none;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <span>Email us<small>Support and inquiries</small></span>
+        </a>
+      </div>
+      <p id="contact-fallback" class="contact-note">Set <code>DISCORD_SERVER_INVITE</code> and/or <code>CONTACT_EMAIL</code> in the script below to show contact options.</p>
+    </section>
+
     <section class="developers">
       <h2 class="section-title">Developers</h2>
       <div class="dev-list" id="dev-list">
@@ -358,7 +543,7 @@
       </div>
     </section>
 
-    <section class="legal-section">
+    <section class="legal-section" id="legal">
       <h2 class="section-title">Legal</h2>
       <div class="legal-tabs">
         <button type="button" class="legal-tab active" data-tab="privacy">Privacy Policy</button>
@@ -382,7 +567,7 @@
         <h3>5. Your rights</h3>
         <p>You may request deletion of your data by leaving servers that use the Bot or by contacting the developers. We will comply with applicable data protection laws.</p>
         <h3>6. Contact</h3>
-        <p>For privacy-related questions, contact the developers listed on this website.</p>
+        <p>For privacy-related questions, contact the developers via the Contact section on this website.</p>
       </div>
       <div id="terms" class="legal-content">
         <h2>Terms of Service</h2>
@@ -400,21 +585,27 @@
         <h3>6. Changes</h3>
         <p>We may update these Terms. Continued use of the Bot after changes constitutes acceptance. Check this page for the latest version.</p>
         <h3>7. Contact</h3>
-        <p>For questions about these Terms, contact the developers listed on this website.</p>
+        <p>For questions about these Terms, contact the developers via the Contact section on this website.</p>
       </div>
     </section>
 
     <footer>
-      <p>Obsidian Overseer is not affiliated with Discord or Warframe. Use of the Bot is subject to our <a href="#" data-tab="privacy">Privacy Policy</a> and <a href="#" data-tab="terms">Terms of Service</a>.</p>
+      <p>Obsidian Overseer is not affiliated with Discord or Warframe. <a href="#" data-tab="privacy">Privacy Policy</a> · <a href="#" data-tab="terms">Terms of Service</a></p>
     </footer>
   </div>
 
   <script>
-    // Replace with your bot's Discord Application (Client) ID from https://discord.com/developers/applications
+    // ——— Config: set these for your bot and contact ———
     const BOT_CLIENT_ID = 'YOUR_BOT_CLIENT_ID';
     const PERMISSIONS = '277025508160';
     const SCOPE = 'bot%20applications.commands';
 
+    // Optional: Discord server invite for support/contact (e.g. https://discord.gg/your-invite-code)
+    const DISCORD_SERVER_INVITE = '';
+    // Optional: contact email (e.g. support@example.com)
+    const CONTACT_EMAIL = '';
+
+    // ——— Invite link ———
     const inviteUrl = BOT_CLIENT_ID && BOT_CLIENT_ID !== 'YOUR_BOT_CLIENT_ID'
       ? `https://discord.com/api/oauth2/authorize?client_id=${BOT_CLIENT_ID}&permissions=${PERMISSIONS}&scope=${SCOPE}`
       : '#';
@@ -427,12 +618,28 @@
       });
     }
 
-    // Legal tabs
+    // ——— Contact section ———
+    var showFallback = true;
+    if (DISCORD_SERVER_INVITE && DISCORD_SERVER_INVITE.trim()) {
+      var discordLink = document.getElementById('contact-discord');
+      discordLink.href = DISCORD_SERVER_INVITE.trim();
+      discordLink.style.display = 'inline-flex';
+      showFallback = false;
+    }
+    if (CONTACT_EMAIL && CONTACT_EMAIL.trim()) {
+      var emailLink = document.getElementById('contact-email');
+      emailLink.href = 'mailto:' + CONTACT_EMAIL.trim();
+      emailLink.style.display = 'inline-flex';
+      showFallback = false;
+    }
+    document.getElementById('contact-fallback').style.display = showFallback ? 'block' : 'none';
+
+    // ——— Legal tabs ———
     document.querySelectorAll('.legal-tab').forEach(function(tab) {
       tab.addEventListener('click', function() {
-        const targetId = this.getAttribute('data-tab');
-        document.querySelectorAll('.legal-tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.legal-content').forEach(c => c.classList.remove('active'));
+        var targetId = this.getAttribute('data-tab');
+        document.querySelectorAll('.legal-tab').forEach(function(t) { t.classList.remove('active'); });
+        document.querySelectorAll('.legal-content').forEach(function(c) { c.classList.remove('active'); });
         this.classList.add('active');
         var el = document.getElementById(targetId);
         if (el) el.classList.add('active');
