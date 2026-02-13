@@ -636,104 +636,74 @@
       color: #f87171;
     }
 
-    /* ----- Developers ----- */
-    .developers {
+    /* ----- Developer ----- */
+    .developer {
       padding: 40px 0 56px;
     }
 
-    .dev-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      justify-content: center;
-    }
-
-    .dev-badge {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 12px 20px;
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    /* ----- Legal ----- */
-    .legal-section {
-      padding: 40px 0 56px;
-      border-top: 1px solid var(--border);
-    }
-
-    .legal-tabs {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
-
-    .legal-tab {
-      padding: 12px 22px;
-      font-family: inherit;
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      transition: color 0.2s, border-color 0.2s, background 0.2s;
-    }
-
-    .legal-tab:hover {
-      color: var(--text);
-      border-color: var(--border-focus);
-    }
-
-    .legal-tab.active {
-      color: var(--accent);
-      border-color: var(--accent);
-      background: rgba(139, 124, 248, 0.12);
-    }
-
-    .legal-content {
-      display: none;
+    .developer-card {
+      max-width: 320px;
+      margin: 0 auto;
+      padding: 28px;
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 32px 36px;
-      max-height: 440px;
-      overflow-y: auto;
+      text-align: center;
     }
 
-    .legal-content.active {
-      display: block;
+    .developer-avatar {
+      width: 96px;
+      height: 96px;
+      margin: 0 auto 16px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--border);
+      background: var(--surface2);
     }
 
-    .legal-content h2 {
+    .developer-avatar.placeholder {
+      object-fit: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.25rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .developer-name {
       font-size: 1.25rem;
       font-weight: 700;
-      margin-bottom: 16px;
       color: var(--text);
-    }
-
-    .legal-content h3 {
-      font-size: 1rem;
-      font-weight: 600;
-      margin: 22px 0 8px;
-      color: var(--text);
-    }
-
-    .legal-content p, .legal-content ul {
-      font-size: 0.9rem;
-      color: var(--text-muted);
       margin-bottom: 12px;
     }
 
-    .legal-content ul {
-      padding-left: 22px;
+    .developer-msg {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 20px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #fff;
+      background: var(--discord-blurple);
+      border: none;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      transition: background 0.2s, transform 0.1s;
     }
 
-    .legal-content li { margin-bottom: 4px; }
+    .developer-msg:hover {
+      background: var(--discord-blurple-hover);
+      transform: translateY(-1px);
+    }
+
+    .developer-msg svg {
+      width: 18px;
+      height: 18px;
+    }
 
     /* ----- Footer ----- */
     footer {
@@ -806,7 +776,7 @@
       <div class="nav-links">
         <a href="#features">Features</a>
         <a href="#contact">Contact</a>
-        <a href="#legal">Legal</a>
+        <a href="legal.html">Legal</a>
       </div>
     </nav>
 
@@ -911,67 +881,29 @@
       </div>
     </section>
 
-    <section class="developers">
-      <h2 class="section-title">Developers</h2>
-      <div class="dev-list" id="dev-list">
-        <span class="dev-badge">Danger!</span>
-      </div>
-    </section>
-
-    <section class="legal-section" id="legal">
-      <h2 class="section-title">Legal</h2>
-      <div class="legal-tabs">
-        <button type="button" class="legal-tab active" data-tab="privacy">Privacy Policy</button>
-        <button type="button" class="legal-tab" data-tab="terms">Terms of Service</button>
-      </div>
-      <div id="privacy" class="legal-content active">
-        <h2>Privacy Policy</h2>
-        <p><strong>Last updated:</strong> February 2025</p>
-        <h3>1. Overview</h3>
-        <p>Obsidian Overseer (“the Bot”) is a Discord bot that may process data from Discord servers it is added to. This policy describes what data we use and how.</p>
-        <h3>2. Data we may collect or process</h3>
-        <ul>
-          <li>Discord user IDs, server IDs, and channel IDs necessary to provide bot features (e.g. economy, profiles, moderation, events).</li>
-          <li>Messages or content only when required for a feature (e.g. moderation logs, suggestions, tickets) and as configured by server staff.</li>
-          <li>Data stored in the Bot’s database (e.g. balances, XP, preferences) is tied to Discord identifiers and is used only to operate the Bot.</li>
-        </ul>
-        <h3>3. How we use data</h3>
-        <p>We use this data solely to operate the Bot (e.g. slash commands, events, economy, moderation tools). We do not sell or share your data with third parties for marketing.</p>
-        <h3>4. Data retention</h3>
-        <p>Data is retained while the Bot is in your server and as needed for features. Server administrators may request information about data stored for their server.</p>
-        <h3>5. Your rights</h3>
-        <p>You may request deletion of your data by leaving servers that use the Bot or by contacting the developers. We will comply with applicable data protection laws.</p>
-        <h3>6. Contact</h3>
-        <p>For privacy-related questions, contact the developers via the Contact section on this website.</p>
-      </div>
-      <div id="terms" class="legal-content">
-        <h2>Terms of Service</h2>
-        <p><strong>Last updated:</strong> February 2025</p>
-        <h3>1. Acceptance</h3>
-        <p>By inviting or using Obsidian Overseer (“the Bot”), you agree to these Terms of Service and to Discord’s Terms of Service and Developer Policy.</p>
-        <h3>2. Use of the Bot</h3>
-        <p>You may add the Bot to Discord servers where you have permission to add bots. You are responsible for how the Bot is used in your server and for complying with Discord’s rules and applicable laws.</p>
-        <h3>3. Acceptable use</h3>
-        <p>You must not use the Bot to harass, spam, or violate Discord’s Terms or Guidelines. Server staff are responsible for configuring moderation and use of the Bot in their server.</p>
-        <h3>4. Availability</h3>
-        <p>The Bot is provided “as is.” We do not guarantee uptime or specific features. We may update or discontinue the Bot with reasonable notice where possible.</p>
-        <h3>5. Limitation of liability</h3>
-        <p>To the extent permitted by law, the developers are not liable for any indirect, incidental, or consequential damages arising from use of the Bot.</p>
-        <h3>6. Changes</h3>
-        <p>We may update these Terms. Continued use of the Bot after changes constitutes acceptance. Check this page for the latest version.</p>
-        <h3>7. Contact</h3>
-        <p>For questions about these Terms, contact the developers via the Contact section on this website.</p>
+    <section class="developer">
+      <h2 class="section-title">Developer</h2>
+      <div class="developer-card">
+        <div id="developer-avatar-wrap" style="display: flex; justify-content: center;">
+          <img id="developer-avatar" class="developer-avatar" src="" alt="" style="display: none;" />
+          <div id="developer-avatar-placeholder" class="developer-avatar placeholder" style="display: none;"></div>
+        </div>
+        <p id="developer-name" class="developer-name">Danger!</p>
+        <a id="developer-msg-link" class="developer-msg" href="#" target="_blank" rel="noopener noreferrer" style="display: none;">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+          Join our Discord
+        </a>
       </div>
     </section>
 
     <footer>
-      <p>Obsidian Overseer — a Warframe Discord bot for clans and communities. Not affiliated with Discord or Warframe. <a href="#" data-tab="privacy">Privacy Policy</a> · <a href="#" data-tab="terms">Terms of Service</a></p>
+      <p>Obsidian Overseer — a Warframe Discord bot for clans and communities. Not affiliated with Discord or Warframe. <a href="legal.html#privacy">Privacy Policy</a> · <a href="legal.html#terms">Terms of Service</a></p>
     </footer>
   </div>
 
   <script>
     // ——— Config: set these for your bot and contact ———
-    const BOT_CLIENT_ID = 'YOUR_BOT_CLIENT_ID';
+    const BOT_CLIENT_ID = '1460107752658440223';
     const PERMISSIONS = '277025508160';
     const SCOPE = 'bot%20applications.commands';
 
@@ -982,6 +914,11 @@
     // Discord webhook URL for the contact form — messages are posted to that channel.
     // Create one: Server → Channel → Edit → Integrations → Webhooks. (URL is visible in page source; use a private channel.)
     const CONTACT_WEBHOOK_URL = 'https://discord.com/api/webhooks/1471771569197027364/40lA9NMgphFHpIzt0mS8250kh--oD-JFIc4FPy3-ohfJ8vqrUMi37Rk2CFcDlEnE3dlI';
+
+    // Developer card: name, avatar image, and optional Discord message link
+    const DEVELOPER_NAME = 'Danger!';
+    const DEVELOPER_IMAGE = 'assets/developer.png';  // e.g. 'assets/developer.png' or full URL — leave empty for initial placeholder
+    const DEVELOPER_DISCORD_LINK = 'https://discord.gg/cNchBqnhjy';  // Discord server invite — link shown on the Developer card
 
     // ——— Invite link ———
     const inviteUrl = BOT_CLIENT_ID && BOT_CLIENT_ID !== 'YOUR_BOT_CLIENT_ID'
@@ -1010,6 +947,32 @@
       emailLink.style.display = 'inline-flex';
       showFallback = false;
     }
+
+    // ——— Developer card ———
+    (function() {
+      document.getElementById('developer-name').textContent = DEVELOPER_NAME || 'Developer';
+      var avatarImg = document.getElementById('developer-avatar');
+      var placeholder = document.getElementById('developer-avatar-placeholder');
+      if (DEVELOPER_IMAGE && DEVELOPER_IMAGE.trim()) {
+        avatarImg.src = DEVELOPER_IMAGE.trim();
+        avatarImg.alt = DEVELOPER_NAME + ' avatar';
+        avatarImg.style.display = 'block';
+        avatarImg.onerror = function() {
+          avatarImg.style.display = 'none';
+          placeholder.textContent = (DEVELOPER_NAME || 'D').charAt(0);
+          placeholder.style.display = 'flex';
+        };
+      } else {
+        placeholder.textContent = (DEVELOPER_NAME || 'D').charAt(0);
+        placeholder.style.display = 'flex';
+      }
+      var msgLink = document.getElementById('developer-msg-link');
+      if (DEVELOPER_DISCORD_LINK && DEVELOPER_DISCORD_LINK.trim()) {
+        msgLink.href = DEVELOPER_DISCORD_LINK.trim();
+        msgLink.style.display = 'inline-flex';
+      }
+    })();
+
     // ——— Contact form ———
     (function() {
       var form = document.getElementById('contact-form');
@@ -1084,25 +1047,6 @@
     })();
 
     // ——— Legal tabs ———
-    document.querySelectorAll('.legal-tab').forEach(function(tab) {
-      tab.addEventListener('click', function() {
-        var targetId = this.getAttribute('data-tab');
-        document.querySelectorAll('.legal-tab').forEach(function(t) { t.classList.remove('active'); });
-        document.querySelectorAll('.legal-content').forEach(function(c) { c.classList.remove('active'); });
-        this.classList.add('active');
-        var el = document.getElementById(targetId);
-        if (el) el.classList.add('active');
-      });
-    });
-
-    document.querySelectorAll('footer a[data-tab]').forEach(function(link) {
-      link.addEventListener('click', function(e) {
-        e.preventDefault();
-        var tab = document.querySelector('.legal-tab[data-tab="' + this.getAttribute('data-tab') + '"]');
-        if (tab) tab.click();
-      });
-    });
-
     // ——— Reflective shine (follows mouse on bold text) ———
     (function() {
       var selector = 'h1, h2, h3, .section-title, .hero-badge, .nav-logo, b, strong';
