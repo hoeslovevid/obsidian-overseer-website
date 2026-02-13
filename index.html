@@ -656,7 +656,6 @@
           <p id="contact-form-message" class="form-message" role="alert"></p>
         </form>
       </div>
-      <p id="contact-fallback" class="contact-note">Set <code>DISCORD_SERVER_INVITE</code> and/or <code>CONTACT_EMAIL</code> in the script below to show contact options.</p>
     </section>
 
     <section class="developers">
@@ -729,7 +728,7 @@
     const CONTACT_EMAIL = '';
     // Discord webhook URL for the contact form — messages are posted to that channel.
     // Create one: Server → Channel → Edit → Integrations → Webhooks. (URL is visible in page source; use a private channel.)
-    const CONTACT_WEBHOOK_URL = '';
+    const CONTACT_WEBHOOK_URL = 'https://discord.com/api/webhooks/1471771569197027364/40lA9NMgphFHpIzt0mS8250kh--oD-JFIc4FPy3-ohfJ8vqrUMi37Rk2CFcDlEnE3dlI';
 
     // ——— Invite link ———
     const inviteUrl = BOT_CLIENT_ID && BOT_CLIENT_ID !== 'YOUR_BOT_CLIENT_ID'
@@ -758,8 +757,6 @@
       emailLink.style.display = 'inline-flex';
       showFallback = false;
     }
-    document.getElementById('contact-fallback').style.display = showFallback ? 'block' : 'none';
-
     // ——— Contact form ———
     (function() {
       var form = document.getElementById('contact-form');
