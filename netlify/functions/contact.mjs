@@ -45,6 +45,7 @@ export default async (req, context) => {
   const name = (body.name || '').trim().slice(0, 100) || '—';
   const email = (body.email || '').trim().slice(0, 200) || '—';
   const preferred = (body.preferred || 'Either').trim().slice(0, 50);
+  const discordUsername = (body.discordUsername || '').trim().slice(0, 100) || '—';
   const rawMessage = (body.message || '').trim();
   if (!rawMessage) {
     return new Response(
@@ -61,6 +62,7 @@ export default async (req, context) => {
       { name: 'From', value: name, inline: true },
       { name: 'Email', value: email, inline: true },
       { name: 'Preferred response', value: preferred, inline: true },
+      { name: 'Discord username', value: discordUsername, inline: true },
       { name: 'Message', value: message.slice(0, 1024), inline: false },
     ],
     footer: { text: 'Obsidian Overseer contact form' },
