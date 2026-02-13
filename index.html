@@ -3,27 +3,31 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Obsidian Overseer — Discord Bot</title>
+  <title>Obsidian Overseer — Warframe Discord Bot</title>
+  <meta name="description" content="The Warframe Discord bot for clans and communities. Baro, cycles, alerts, voice channels, economy, moderation, and more." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #0a0c10;
-      --bg-gradient: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(124, 110, 246, 0.15), transparent),
-                    radial-gradient(ellipse 60% 40% at 80% 50%, rgba(88, 101, 242, 0.08), transparent);
-      --surface: #12141c;
-      --surface2: #1a1d28;
-      --surface-hover: #22262f;
-      --border: #2a2e3d;
-      --border-focus: #3d4254;
-      --text: #f0f2f5;
-      --text-muted: #8b90a4;
-      --text-subtle: #6b7080;
-      --accent: #8b7cf8;
-      --accent-bright: #a89bfa;
-      --accent-dim: #6d5dd6;
-      --accent-glow: rgba(139, 124, 248, 0.35);
+      --bg: #06070a;
+      --bg-gradient: radial-gradient(ellipse 100% 80% at 50% 0%, rgba(15, 12, 20, 0.98) 0%, transparent 50%),
+                    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(212, 140, 60, 0.08), transparent),
+                    radial-gradient(ellipse 60% 40% at 80% 60%, rgba(230, 149, 42, 0.04), transparent);
+      --surface: #0f1115;
+      --surface2: #161a20;
+      --surface-hover: #1c2028;
+      --border: #2a2520;
+      --border-focus: #3d352c;
+      --text: #f0ebe5;
+      --text-muted: #9a8f82;
+      --text-subtle: #6b6156;
+      --matrix-orange: rgba(230, 149, 42, 0.5);
+      --matrix-orange-dim: rgba(212, 140, 60, 0.15);
+      --accent: #d4943c;
+      --accent-bright: #e8a84a;
+      --accent-dim: #b87828;
+      --accent-glow: rgba(212, 148, 60, 0.35);
       --discord-blurple: #5865F2;
       --discord-blurple-hover: #4752c4;
       --radius: 14px;
@@ -53,14 +57,208 @@
       overflow-x: hidden;
     }
 
+    /* Ambient drifting orbs (subtle animated background) */
+    .bg-ambient {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .bg-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.35;
+    }
+
+    .bg-orb-1 {
+      width:  min(80vw, 600px);
+      height: min(80vw, 600px);
+      background: radial-gradient(circle, rgba(230, 149, 42, 0.25) 0%, transparent 70%);
+      top:  -20%;
+      left: -10%;
+      animation: drift-1 25s ease-in-out infinite;
+    }
+
+    .bg-orb-2 {
+      width:  min(60vw, 400px);
+      height: min(60vw, 400px);
+      background: radial-gradient(circle, rgba(212, 140, 60, 0.2) 0%, transparent 70%);
+      top:  40%;
+      right: -15%;
+      animation: drift-2 30s ease-in-out infinite;
+    }
+
+    .bg-orb-3 {
+      width:  min(50vw, 320px);
+      height: min(50vw, 320px);
+      background: radial-gradient(circle, rgba(232, 168, 74, 0.18) 0%, transparent 70%);
+      bottom: -10%;
+      left:  20%;
+      animation: drift-3 22s ease-in-out infinite;
+    }
+
+    @keyframes drift-1 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33%      { transform: translate(5%, 8%) scale(1.05); }
+      66%      { transform: translate(-4%, 4%) scale(0.98); }
+    }
+
+    @keyframes drift-2 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50%      { transform: translate(-8%, -5%) scale(1.08); }
+    }
+
+    @keyframes drift-3 {
+      0%, 100% { transform: translate(0, 0); }
+      25%      { transform: translate(6%, -6%); }
+      75%      { transform: translate(-5%, 3%); }
+    }
+
+    /* Little orange galaxies */
+    .bg-galaxy {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(25px);
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    .bg-galaxy-1 {
+      width:  min(35vw, 220px);
+      height: min(18vw, 100px);
+      background: radial-gradient(ellipse 100% 100% at 50% 50%,
+        rgba(230, 149, 42, 0.35) 0%,
+        rgba(212, 140, 60, 0.15) 40%,
+        transparent 70%);
+      top:  15%;
+      right: 8%;
+      animation: galaxy-with-stars 180s linear infinite;
+    }
+
+    .bg-galaxy-2 {
+      width:  min(28vw, 180px);
+      height: min(14vw, 85px);
+      background: radial-gradient(ellipse 100% 100% at 50% 50%,
+        rgba(232, 168, 74, 0.3) 0%,
+        rgba(212, 140, 60, 0.12) 45%,
+        transparent 75%);
+      bottom: 25%;
+      left: 5%;
+      animation: galaxy-with-stars 180s linear infinite;
+    }
+
+    .bg-galaxy-3 {
+      width:  min(22vw, 140px);
+      height: min(12vw, 70px);
+      background: radial-gradient(ellipse 100% 100% at 50% 50%,
+        rgba(230, 149, 42, 0.28) 0%,
+        rgba(200, 120, 50, 0.1) 50%,
+        transparent 70%);
+      top:  55%;
+      left: 25%;
+      animation: galaxy-with-stars 180s linear infinite;
+    }
+
+    .bg-galaxy-4 {
+      width:  min(20vw, 130px);
+      height: min(18vw, 90px);
+      background: radial-gradient(ellipse 100% 100% at 50% 50%,
+        rgba(212, 140, 60, 0.25) 0%,
+        rgba(230, 149, 42, 0.08) 45%,
+        transparent 72%);
+      top:  8%;
+      left: 40%;
+      animation: galaxy-with-stars 180s linear infinite;
+    }
+
+    /* Same 180s cycle as starfield — galaxies drift right and down with the stars */
+    @keyframes galaxy-with-stars {
+      0%   { transform: translate(0, 0); }
+      100% { transform: translate(6%, 4%); }
+    }
+
+    /* Space-style background: starfield + depth */
     body::before {
       content: '';
       position: fixed;
       inset: 0;
       background-image:
-        linear-gradient(rgba(139, 124, 248, 0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(139, 124, 248, 0.04) 1px, transparent 1px);
-      background-size: 56px 56px;
+        radial-gradient(ellipse 120% 100% at 50% 100%, rgba(18, 14, 22, 0.7) 0%, transparent 55%),
+        radial-gradient(1.5px 1.5px at 20px 30px, rgba(255, 255, 255, 0.38), transparent),
+        radial-gradient(1px 1px at 90px 120px, rgba(255, 255, 255, 0.32), transparent),
+        radial-gradient(1.5px 1.5px at 160px 40px, rgba(255, 255, 255, 0.28), transparent),
+        radial-gradient(1px 1px at 250px 180px, rgba(230, 200, 150, 0.24), transparent),
+        radial-gradient(1.5px 1.5px at 320px 80px, rgba(255, 255, 255, 0.32), transparent),
+        radial-gradient(1px 1px at 50px 200px, rgba(255, 255, 255, 0.26), transparent),
+        radial-gradient(1px 1px at 280px 250px, rgba(230, 200, 150, 0.2), transparent),
+        radial-gradient(1.5px 1.5px at 140px 160px, rgba(255, 255, 255, 0.28), transparent),
+        radial-gradient(1px 1px at 380px 30px, rgba(255, 255, 255, 0.22), transparent);
+      background-size:
+        100% 100%,
+        400px 300px,
+        400px 300px,
+        400px 300px,
+        400px 300px,
+        400px 300px,
+        400px 300px,
+        400px 300px,
+        400px 300px,
+        400px 300px;
+      background-position:
+        0 0,
+        0 0,
+        30px 10px,
+        80px 60px,
+        120px 90px,
+        200px 20px,
+        10px 150px,
+        150px 180px,
+        60px 100px,
+        250px 50px;
+      background-repeat: repeat;
+      pointer-events: none;
+      z-index: 0;
+      animation: stars-drift 180s linear infinite;
+    }
+
+    @keyframes stars-drift {
+      0% {
+        background-position:
+          0 0,
+          0 0,
+          30px 10px,
+          80px 60px,
+          120px 90px,
+          200px 20px,
+          10px 150px,
+          150px 180px,
+          60px 100px,
+          250px 50px;
+      }
+      100% {
+        background-position:
+          0 0,
+          -400px -300px,
+          -370px -290px,
+          -320px -240px,
+          -280px -210px,
+          -200px -280px,
+          -390px -150px,
+          -250px -120px,
+          -340px -200px,
+          -150px -250px;
+      }
+    }
+
+    /* Subtle vignette (optional depth) */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 70% at 50% 50%, transparent 40%, rgba(0, 0, 0, 0.25) 100%);
       pointer-events: none;
       z-index: 0;
     }
@@ -553,9 +751,55 @@
     }
 
     footer a:hover { text-decoration: underline; }
+
+    /* Reflective shine on bold text (follows mouse) */
+    .text-reflective {
+      --shine-x: -100%;
+      --shine-y: -100%;
+      background: radial-gradient(
+        circle 140px at var(--shine-x) var(--shine-y),
+        rgba(255, 255, 255, 0.5) 0%,
+        transparent 60%
+      ), var(--text);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero h1.text-reflective {
+      background: radial-gradient(
+        circle 140px at var(--shine-x) var(--shine-y),
+        rgba(255, 255, 255, 0.5) 0%,
+        transparent 60%
+      ), linear-gradient(160deg, var(--text) 0%, var(--text) 40%, var(--accent-bright) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-badge.text-reflective,
+    .nav-logo.text-reflective {
+      background: radial-gradient(
+        circle 100px at var(--shine-x) var(--shine-y),
+        rgba(255, 255, 255, 0.5) 0%,
+        transparent 55%
+      ), var(--accent);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
   </style>
 </head>
 <body>
+  <div class="bg-ambient" aria-hidden="true">
+    <span class="bg-orb bg-orb-1"></span>
+    <span class="bg-orb bg-orb-2"></span>
+    <span class="bg-orb bg-orb-3"></span>
+    <span class="bg-galaxy bg-galaxy-1"></span>
+    <span class="bg-galaxy bg-galaxy-2"></span>
+    <span class="bg-galaxy bg-galaxy-3"></span>
+    <span class="bg-galaxy bg-galaxy-4"></span>
+  </div>
   <div class="container">
     <nav>
       <a href="#" class="nav-logo">Obsidian Overseer</a>
@@ -567,10 +811,10 @@
     </nav>
 
     <header class="hero">
-      <span class="hero-badge">Discord Bot</span>
+      <span class="hero-badge">Warframe Discord Bot</span>
       <img src="assets/logo.png" alt="Obsidian Overseer" class="hero-logo" />
-      <h1>One bot for your whole server.</h1>
-      <p>Voice channels, economy, Warframe, moderation, events, and more. Add Obsidian Overseer to your Discord server in one click.</p>
+      <h1>The Warframe bot for your clan and community.</h1>
+      <p>Built for Warframe Discord servers: Baro, cycles, alerts, voice channels, economy, moderation, events, and more. Add Obsidian Overseer in one click.</p>
       <div class="invite-hero">
         <a id="invite-link" class="invite-btn" href="#" target="_blank" rel="noopener noreferrer">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
@@ -582,7 +826,7 @@
 
     <section class="features" id="features">
       <h2 class="section-title">What Obsidian Overseer can do</h2>
-      <p class="section-subtitle">Everything you need to run a thriving community server—voice, economy, Warframe, moderation, and more.</p>
+      <p class="section-subtitle">Built for Warframe clans and communities—voice, economy, Baro &amp; cycles, alerts, moderation, and more.</p>
       <div class="feature-grid">
         <div class="feature-card">
           <span class="icon">🎤</span>
@@ -721,7 +965,7 @@
     </section>
 
     <footer>
-      <p>Obsidian Overseer is not affiliated with Discord or Warframe. <a href="#" data-tab="privacy">Privacy Policy</a> · <a href="#" data-tab="terms">Terms of Service</a></p>
+      <p>Obsidian Overseer — a Warframe Discord bot for clans and communities. Not affiliated with Discord or Warframe. <a href="#" data-tab="privacy">Privacy Policy</a> · <a href="#" data-tab="terms">Terms of Service</a></p>
     </footer>
   </div>
 
@@ -858,6 +1102,32 @@
         if (tab) tab.click();
       });
     });
+
+    // ——— Reflective shine (follows mouse on bold text) ———
+    (function() {
+      var selector = 'h1, h2, h3, .section-title, .hero-badge, .nav-logo, b, strong';
+      var reflectiveEls = document.querySelectorAll(selector);
+      reflectiveEls.forEach(function(el) { el.classList.add('text-reflective'); });
+
+      function updateShine(e) {
+        var x = e.clientX;
+        var y = e.clientY;
+        reflectiveEls.forEach(function(el) {
+          var r = el.getBoundingClientRect();
+          if (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom) {
+            var pctX = ((x - r.left) / r.width) * 100;
+            var pctY = ((y - r.top) / r.height) * 100;
+            el.style.setProperty('--shine-x', pctX + '%');
+            el.style.setProperty('--shine-y', pctY + '%');
+          } else {
+            el.style.setProperty('--shine-x', '-100%');
+            el.style.setProperty('--shine-y', '-100%');
+          }
+        });
+      }
+
+      document.addEventListener('mousemove', updateShine);
+    })();
   </script>
 </body>
 </html>
