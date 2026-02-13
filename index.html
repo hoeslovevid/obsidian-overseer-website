@@ -327,6 +327,109 @@
       color: var(--text-subtle);
     }
 
+    /* ----- Contact form ----- */
+    .contact-form-wrap {
+      max-width: 480px;
+      margin: 28px auto 0;
+      padding: 28px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+
+    .contact-form-wrap h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: var(--text);
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px 14px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      color: var(--text);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .form-group textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .form-group label .optional {
+      font-weight: 400;
+      color: var(--text-subtle);
+    }
+
+    .form-submit {
+      width: 100%;
+      padding: 14px;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dim) 100%);
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+
+    .form-submit:hover:not(:disabled) {
+      opacity: 0.95;
+    }
+
+    .form-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .form-message {
+      margin-top: 14px;
+      padding: 12px 14px;
+      font-size: 0.9rem;
+      border-radius: var(--radius-sm);
+      display: none;
+    }
+
+    .form-message.success {
+      display: block;
+      background: rgba(107, 207, 127, 0.15);
+      border: 1px solid rgba(107, 207, 127, 0.4);
+      color: var(--success, #6bcf7f);
+    }
+
+    .form-message.error {
+      display: block;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #f87171;
+    }
+
     /* ----- Developers ----- */
     .developers {
       padding: 40px 0 56px;
@@ -533,6 +636,26 @@
           <span>Email us<small>Support and inquiries</small></span>
         </a>
       </div>
+      <div class="contact-form-wrap">
+        <h3>Send us a message</h3>
+        <p class="section-subtitle" style="margin-bottom: 20px;">We’ll get it in Discord. Fill out the form below.</p>
+        <form id="contact-form">
+          <div class="form-group">
+            <label for="contact-name">Your name <span class="optional">(optional)</span></label>
+            <input type="text" id="contact-name" name="name" placeholder="e.g. Alex" maxlength="100" autocomplete="name">
+          </div>
+          <div class="form-group">
+            <label for="contact-email-field">Email <span class="optional">(optional)</span></label>
+            <input type="email" id="contact-email-field" name="email" placeholder="e.g. you@example.com" maxlength="200" autocomplete="email">
+          </div>
+          <div class="form-group">
+            <label for="contact-message">Message <span style="color: var(--accent);">*</span></label>
+            <textarea id="contact-message" name="message" placeholder="Your question or feedback..." required maxlength="2000"></textarea>
+          </div>
+          <button type="submit" class="form-submit" id="contact-submit">Send message</button>
+          <p id="contact-form-message" class="form-message" role="alert"></p>
+        </form>
+      </div>
       <p id="contact-fallback" class="contact-note">Set <code>DISCORD_SERVER_INVITE</code> and/or <code>CONTACT_EMAIL</code> in the script below to show contact options.</p>
     </section>
 
@@ -604,6 +727,9 @@
     const DISCORD_SERVER_INVITE = '';
     // Optional: contact email (e.g. support@example.com)
     const CONTACT_EMAIL = '';
+    // Discord webhook URL for the contact form — messages are posted to that channel.
+    // Create one: Server → Channel → Edit → Integrations → Webhooks. (URL is visible in page source; use a private channel.)
+    const CONTACT_WEBHOOK_URL = '';
 
     // ——— Invite link ———
     const inviteUrl = BOT_CLIENT_ID && BOT_CLIENT_ID !== 'YOUR_BOT_CLIENT_ID'
@@ -633,6 +759,79 @@
       showFallback = false;
     }
     document.getElementById('contact-fallback').style.display = showFallback ? 'block' : 'none';
+
+    // ——— Contact form ———
+    (function() {
+      var form = document.getElementById('contact-form');
+      var submitBtn = document.getElementById('contact-submit');
+      var msgEl = document.getElementById('contact-form-message');
+
+      function showMsg(text, isError) {
+        msgEl.textContent = text;
+        msgEl.className = 'form-message ' + (isError ? 'error' : 'success');
+        msgEl.style.display = 'block';
+      }
+
+      function hideMsg() {
+        msgEl.style.display = 'none';
+        msgEl.className = 'form-message';
+      }
+
+      form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        hideMsg();
+        var name = (document.getElementById('contact-name').value || '').trim();
+        var email = (document.getElementById('contact-email-field').value || '').trim();
+        var message = (document.getElementById('contact-message').value || '').trim();
+        if (!message) {
+          showMsg('Please enter a message.', true);
+          return;
+        }
+        if (message.length > 2000) {
+          showMsg('Message must be 2000 characters or less.', true);
+          return;
+        }
+
+        var webhookUrl = CONTACT_WEBHOOK_URL && CONTACT_WEBHOOK_URL.trim();
+        if (!webhookUrl) {
+          showMsg('Contact form is not configured. Set CONTACT_WEBHOOK_URL in the page script.', true);
+          return;
+        }
+
+        submitBtn.disabled = true;
+        var embed = {
+          title: '📩 New message from website',
+          color: 0x8b7cf8,
+          fields: [
+            { name: 'From', value: name || '—', inline: true },
+            { name: 'Email', value: email || '—', inline: true },
+            { name: 'Message', value: message.slice(0, 1024), inline: false },
+          ],
+          footer: { text: 'Obsidian Overseer contact form' },
+          timestamp: new Date().toISOString(),
+        };
+        if (message.length > 1024) {
+          embed.fields.push({ name: '(continued)', value: message.slice(1024, 2048), inline: false });
+        }
+
+        try {
+          var res = await fetch(webhookUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ embeds: [embed] }),
+          });
+          if (res.ok) {
+            showMsg('Message sent! We\'ll get back to you.', false);
+            form.reset();
+          } else {
+            showMsg('Could not send. Try again or use Discord/email above.', true);
+          }
+        } catch (err) {
+          showMsg('Network error. Check your connection and try again.', true);
+        }
+        submitBtn.disabled = false;
+      });
+    })();
 
     // ——— Legal tabs ———
     document.querySelectorAll('.legal-tab').forEach(function(tab) {
